@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { TChildren } from "@/types";
+import Providers from "@/components/providers";
 
 
 export const metadata: Metadata = {
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: TChildren) {
     return (
         <html lang="en">
             <body>
-                {children}
+                <Providers>
+                    {children}
+                </Providers>
             </body>
         </html>
     );

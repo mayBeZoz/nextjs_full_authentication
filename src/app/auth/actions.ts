@@ -1,5 +1,7 @@
 "use server"
 
+import { connectDB } from "@/lib/db-connection"
+import { registerSchema } from "@/lib/schemas"
 import { generateAccessToken, generateRefreshToken } from "@/lib/utils"
 import { UserModel } from "@/models/user"
 import { IUser, IUserDocument } from "@/types"
@@ -9,6 +11,8 @@ import { redirect } from "next/navigation"
 import { z } from "zod"
 
 export async function loginAction ( email:string, password:string ) {
+    await connectDB()
+
     const user = await UserModel.findOne({ email })
 
     if (user) {
@@ -35,46 +39,33 @@ export async function loginAction ( email:string, password:string ) {
 
 }
 
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-
-const registerSchema = z.object({
-    email:z.string({
-        required_error:"user email is required"
-    }).email().min(6,"user email must be at least 6 characters"),
-    password:z.string({
-        required_error:"user password is required"
-    }).regex(passwordRegex,"password must be at least 6 characters, include capital letter, number, special character"),
-    first_name:z.string({
-        required_error:"first name is required"
-    }).min(3,"first name must be at least 3 characters"),
-    last_name:z.string({
-        required_error:"last name is required"
-    }).min(3,"last name must be at least 3 characters"),
-}).strict("extra fields are not allowed")
 
 type TRegisterPayload = z.infer<typeof registerSchema>
 
 export async function registerAction (payload:TRegisterPayload) {
+    await connectDB()
+
     const user = await UserModel.findOne({ email: payload.email }).lean<IUser>()
 
     if (user) {
         if (user.verified) {
-            setTimeout(() => {
-                redirect('/auth/login')
-            }, 0);
             return {
                 success:false,
                 message:"user with this email already exists, login to your account",
-                data:null
+                data:{
+                    verified:false,
+                    email:user.email
+                }
             }
         }else {
-            setTimeout(() => {
-                redirect(`/auth/verify-account/${user._id}`)
-            }, 0);
+
             return {
                 success:false,
                 message:"user with this email already exists, verify your account",
-                data:null
+                data:{
+                    verified:true,
+                    email:user.email
+                }
             }
         }
     }
@@ -86,7 +77,7 @@ export async function registerAction (payload:TRegisterPayload) {
     return {
         success:false,
         message:error?.message,
-        data:null
+        data:null,
     }
     
     try {
@@ -97,9 +88,6 @@ export async function registerAction (payload:TRegisterPayload) {
         })
         newUser.set_verification_otp(10 * 60 * 1000)
         
-        setTimeout(() => {
-            redirect(`/auth/verify-account/${newUser._id}`)
-        }, 0);
 
         return {
             success:true,
