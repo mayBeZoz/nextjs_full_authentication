@@ -30,9 +30,10 @@ export async function loginAction (payload: TLoginPayload) {
                 const refreshToken = generateRefreshToken(user)
 
                 const cookieStore = await cookies()
+                const isProduction = process.env.NODE_ENV === 'production';
 
-                cookieStore.set("access_token", accessToken, { httpOnly:true, secure:true })
-                cookieStore.set("refresh_token", refreshToken, { httpOnly:true, secure:true })
+                cookieStore.set("access_token", accessToken, { httpOnly:true, secure:isProduction })
+                cookieStore.set("refresh_token", refreshToken, { httpOnly:true, secure:isProduction })
 
                 return {
                     success:true,
