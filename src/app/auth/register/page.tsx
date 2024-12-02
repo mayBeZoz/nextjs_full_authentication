@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRegister } from "../_hooks/useRegister"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 type TFormFields = z.infer<typeof registerSchema>
 
@@ -34,7 +35,7 @@ function Register() {
                 className="flex p-4 py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
             >
                 <h1 className='font-extrabold text-3xl mb-10 text-center'>Create Account</h1>
-                <div className="space-y-5 mb-8">
+                <div className="space-y-5">
                     <div>
                         <Label>First Name</Label>
                         <FormInput 
@@ -68,8 +69,14 @@ function Register() {
                         />
                     </div>
                 </div>
-
-                <Button disabled={isLoading} type="submit">Submit</Button>
+                <p className="text-sm space-x-1 mb-5 mt-2">
+                    <span>Already Have An Account?</span>
+                    <Link 
+                        href="/auth/login" 
+                        className="text-blue-500"
+                    >Login</Link>
+                </p>
+                <Button disabled={isLoading} type="submit">Register</Button>
             </Form>
         </section>
     )

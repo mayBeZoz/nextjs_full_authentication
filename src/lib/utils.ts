@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { IUserDocument } from "@/types";
 import { sign } from "jsonwebtoken"
-1
+
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
@@ -52,3 +52,5 @@ export function generateRefreshToken ( user: IUserDocument ) {
         }
     )
 }
+
+

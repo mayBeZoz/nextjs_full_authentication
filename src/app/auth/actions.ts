@@ -7,33 +7,54 @@ import { UserModel } from "@/models/user"
 import { IUser, IUserDocument } from "@/types"
 import { compare, hash } from "bcrypt"
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 import { z } from "zod"
 
-export async function loginAction ( email:string, password:string ) {
+type TLoginPayload = {
+    email: string,
+    password: string
+}
+
+export async function loginAction (payload: TLoginPayload) {
     await connectDB()
 
-    const user = await UserModel.findOne({ email })
+    const { email, password } = payload
+
+    const user: IUserDocument|null = await UserModel.findOne({ email })
 
     if (user) {
-        const isPwdValid = await compare(password,user.password)
-        if (isPwdValid){
+        if (user.verified) {
+            const isPwdValid = await compare(password,user.password)
+            if (isPwdValid){
 
-            const accessToken = generateAccessToken(user)
-            const refreshToken = generateRefreshToken(user)
+                const accessToken = generateAccessToken(user)
+                const refreshToken = generateRefreshToken(user)
 
-            const cookieStore = await cookies()
+                const cookieStore = await cookies()
 
-            cookieStore.set("access_token",accessToken)
-            cookieStore.set("refresh_token",refreshToken)
+                cookieStore.set("access_token", accessToken, { httpOnly:true, secure:true })
+                cookieStore.set("refresh_token", refreshToken, { httpOnly:true, secure:true })
 
-            redirect('/')
+                return {
+                    success:true,
+                    message:"Logged In Successfully",
+                    data:null
+                }
+            }
+        }else {
+            return {
+                success:false,
+                message:"Your Account Is Not Activated",
+                data:{
+                    verified:false,
+                    email:user.email
+                }
+            }
         }
     }
 
     return {
         success:false,
-        message:"user with this credentials is not found",
+        message:"User With This Credentials Is Not Found",
         data:null
     }
 
@@ -53,17 +74,16 @@ export async function registerAction (payload:TRegisterPayload) {
                 success:false,
                 message:"user with this email already exists, login to your account",
                 data:{
-                    verified:false,
+                    verified:true,
                     email:user.email
                 }
             }
         }else {
-
             return {
                 success:false,
                 message:"user with this email already exists, verify your account",
                 data:{
-                    verified:true,
+                    verified:false,
                     email:user.email
                 }
             }
@@ -87,12 +107,14 @@ export async function registerAction (payload:TRegisterPayload) {
             password:hashedPassword
         })
         newUser.set_verification_otp(10 * 60 * 1000)
-        
 
         return {
             success:true,
             message:"your account is created successfully",
-            data:null
+            data:{
+                verified:false,
+                email:newUser.email
+            }
         }
 
     }catch {
@@ -104,3 +126,6 @@ export async function registerAction (payload:TRegisterPayload) {
     }
     
 }
+
+
+

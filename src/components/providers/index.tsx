@@ -2,11 +2,14 @@
 
 import { TChildren } from "@/types";
 import TanstackProvider from "./tanstack-provider";
+import { ToastProvider } from "./toast-provider";
 
 export default function Providers ({ children }: TChildren) {
     return (
         <TanstackProvider>
-            {children}
+            <ToastProvider>
+                {children}
+            </ToastProvider>
         </TanstackProvider>
     )
 }
