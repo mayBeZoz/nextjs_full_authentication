@@ -12,6 +12,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: TChildren) {
     return (
         <html lang="en">
+            <head>
+            </head>
             <body>
                 <Providers>
                     {children}

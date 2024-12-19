@@ -14,7 +14,7 @@ declare interface IUser {
     verification_otp:       string|null,
     reset_password_otp:     string|null,
     role:                   USER_ROLES,
-    _id:                    string
+    _id:                    string,
 }
 
 interface IUserDocument extends IUser,Document {}

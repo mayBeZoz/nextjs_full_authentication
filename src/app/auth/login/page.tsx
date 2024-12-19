@@ -1,17 +1,17 @@
 "use client"
 
+import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { FormInput } from '@/components/ui/form-input'
 import { Label } from '@/components/ui/label'
-import React from 'react'
 import { useLogin } from '../_hooks/useLogin'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 
 type TFormFields = {
     email: string,
-    password: string
+    password: string,
 }
 
 function Login() {
@@ -21,7 +21,7 @@ function Login() {
     const form = useForm<TFormFields>({
         defaultValues:{
             email:"",
-            password:""
+            password:"",
         },
     })
 
@@ -36,7 +36,7 @@ function Login() {
                 <div className="space-y-5">
                     <div>
                         <Label>Email</Label>
-                        <FormInput 
+                        <FormInput
                             placeholder="Ex: John_doe@example.xyz"
                             name="email"
                             type="email"

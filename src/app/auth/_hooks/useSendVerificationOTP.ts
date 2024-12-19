@@ -18,14 +18,17 @@ export function useSendVerificationOTP () {
         mutationFn:(userEmail:string) => sendVerificationEmailAction(userEmail),
         mutationKey:['send_account_verification_otp'],
         onSettled:(res) => {
-            if (!res) return  
-            if (res.success)             
-            return toast.success(res.message)
-            if (res.data?.verified) {
-                router.push("/auth/login")
-                return toast.error(res.message)
+            if (res) {
+                if (res.success) {
+                    toast.success(res.message)
+                } else if (res.data?.verified) {
+                    router.push("/auth/login")
+                    toast.error(res.message)
+                } else {
+                    toast.error(res.message)
+                }
             }
-            toast.error(res.message)
+            
         }
     })
 

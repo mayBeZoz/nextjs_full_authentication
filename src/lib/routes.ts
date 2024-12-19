@@ -21,6 +21,11 @@ const protectedRoutes:Record<string,TRoute> = {
     },
 }
 
+const authRoutes = [
+    "auth/login",
+    "auth/register",
+    "auth/verify-account",    
+]
 
 
 const flattenedRoutes = cache(function (
@@ -45,6 +50,11 @@ const flattenedRoutes = cache(function (
 })
 
 export function checkUserRouteAccess (userRole:TUserRoleValue|null,pathname:string) {
+
+    if (userRole) {
+        const canAccess = authRoutes.find(route => pathname.includes(route))
+        if (canAccess) return false
+    }
 
     const routesMap = flattenedRoutes(protectedRoutes)
     const routeAllowedRoles = routesMap[pathname]

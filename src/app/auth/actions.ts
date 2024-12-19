@@ -1,7 +1,7 @@
 "use server"
 
 import { connectDB } from "@/lib/db-connection"
-import { registerSchema, verifyAccountSchema } from "@/lib/schemas"
+import { registerSchema, resetPasswordSchema, verifyAccountSchema } from "@/lib/schemas"
 import { generateAccessToken, generateOTP, sendEmail } from "@/lib/utils"
 import { UserModel } from "@/models/user"
 import { IUser, IUserDocument } from "@/types"
@@ -228,5 +228,96 @@ export async function submitVerificationOTPAction(payload:TAccountVerificationPa
         data:null
     }
     
+    
+}
+
+
+
+
+
+
+export async function sendResetPasswordEmailAction (userEmail:string) {
+    await connectDB()
+
+    const user: IUserDocument|null = await UserModel.findOne({ email: userEmail })
+
+    if (!user) {
+        return {
+            success:false,
+            message:"User With This Email Is Not Found",
+            data:null
+        }
+    }
+
+    const ms = 10 * 60 * 1000
+    const otp = generateOTP()
+    user.reset_password_otp = otp
+
+    await user.save()
+    setTimeout(()=>{
+        user.reset_password_otp = null
+        user.save()
+    },ms)
+
+    const isSuccess = sendEmail(userEmail,otp)
+    if (isSuccess) {
+        return {
+            success:true,
+            message:"reset password email sent successfully",
+            data:null
+        }
+    }
+
+    return {
+        success:false,
+        message:"error occur please try again",
+        data:null
+    }
+}
+
+
+type TResetPasswordPayload = z.infer<typeof resetPasswordSchema>
+export async function submitResetPasswordOTPAction(payload:TResetPasswordPayload) {
+
+    await connectDB()
+
+    const user: IUserDocument|null = await UserModel.findOne({ email: payload.email })
+
+    if (!user) {
+        return {
+            success:false,
+            message:"User With This Email Is Not Found",
+            data:null
+        }
+    }
+    
+    const { success, error } = resetPasswordSchema.safeParse(payload)
+
+    if (!success) 
+    return {
+        success:false,
+        message:error?.message,
+        data:null,
+    }
+    const isOTPValid = payload.otp === user.reset_password_otp
+
+    if (!isOTPValid) {
+        return {
+            success:false,
+            message:"Invalid OTP",
+            data:null
+        }
+    }
+    
+    const hashedPassword = await hash(payload.password,12)
+    user.password = hashedPassword
+    user.verification_otp = null
+    await user.save()
+
+    return {
+        success:true,
+        message:"Your Password Is Reset Successfully",
+        data:null
+    }
     
 }

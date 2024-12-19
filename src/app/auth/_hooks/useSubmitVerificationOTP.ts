@@ -25,16 +25,17 @@ export function useSubmitVerificationOTP () {
         mutationFn: (payload) => submitVerificationOTPAction(payload),
         mutationKey:['submit_verification_otp'],
         onSettled: (res) => {
-            if (!res) return  
-            if (res.success) {
-                router.push("/auth/login")
-                return toast.success(res.message)
-            }             
-            if (res.data?.verified) {
-                router.push("/auth/login")
-                return toast.error(res.message)
+            if (res) {
+                if (res.success) {
+                    router.push("/auth/login")
+                    toast.success(res.message)
+                } else if (res.data?.verified) {
+                    router.push("/auth/login")
+                     toast.error(res.message)
+                } else {
+                    toast.error(res.message)
+                }
             }
-            toast.error(res.message)
         }
     })
 

@@ -42,7 +42,6 @@ function VerifyAccount() {
         submitAccountVerificationOTP
     } = useSubmitVerificationOTP()
 
-
     useEffect(()=>{
         sendVerificationOTP(email)
     },[email,sendVerificationOTP])

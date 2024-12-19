@@ -25,15 +25,17 @@ export function useLogin () {
         mutationFn:(payload:TLoginPayload) => loginAction(payload),
         retry:0,
         onSettled(res) {
-            if (!res) return 
-            if (res.success) {
-                toast.success(res.message)
-                router.push("/")
+            if (res) {
+                if (res.success) {
+                    toast.success(res.message)
+                    router.push("/")
+                }else  {
+                    if (res.data) {
+                        router.push(`/auth/verify-account?email=${res.data.email}`)
+                    }
+                    toast.error(res.message)
+                }
             }
-            if (res.data && !res.data.verified) {
-                router.push(`/auth/verify-account?email=${res.data.email}`)
-            }
-            toast.error(res.message)
         },
     })
     return {
