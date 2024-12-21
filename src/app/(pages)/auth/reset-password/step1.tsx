@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { FormInput } from '@/components/ui/form-input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 type TFormFields = {
     email: string
@@ -36,18 +37,25 @@ function Step1() {
         <Form 
             form={form}
             handleSubmit={handleSubmit}
-            className="flex p-4 items-center py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
+            className="flex p-4 py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
         >
-            <h1 className='form_heading mb-10'>Enter Your Email</h1>
-            <div className='w-full mb-6'>
-                <Label>Email</Label>
+            <h1 className='form_heading mb-10'>Reset Your Password</h1>
+            <div className='w-full mb-2'>
+                <Label htmlFor='email'>Enter Your Email</Label>
                 <FormInput
+                    id='email'
                     name='email'
-                    required={true}
                     type='email'
                     placeholder="Ex: John_doe@example.xyz"
                 />
             </div>
+            <p className="text-sm space-x-1 mb-5">
+                <span>Already Have An Account?</span>
+                <Link
+                    href="/auth/login" 
+                    className="text-blue-500"
+                >Login</Link>
+            </p>
             <Button
                 className='w-full' 
                 variant="default"

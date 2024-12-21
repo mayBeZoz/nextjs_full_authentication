@@ -33,7 +33,7 @@ function Login() {
                 className="flex p-4 py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
             >
                 <h1 className='form_heading mb-10'>Welcome Back!</h1>
-                <div className="space-y-5">
+                <div className="space-y-5 mb-4">
                     <div>
                         <Label>Email</Label>
                         <FormInput
@@ -50,8 +50,15 @@ function Login() {
                             type="password"
                         />
                     </div>
-                </div>
-                <p className="text-sm space-x-1 mb-5 mt-2">
+                </div> 
+                <p className="text-sm space-x-1">
+                    <span>Forgot Password? </span>
+                    <Link
+                        href="/auth/reset-password" 
+                        className="text-blue-500"
+                    >Reset Your Password</Link>
+                </p>
+                <p className="text-sm space-x-1 mb-5 ">
                     <span>{"Don't"} Have An Account?</span>
                     <Link
                         href="/auth/register" 

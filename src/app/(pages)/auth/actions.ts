@@ -2,7 +2,9 @@
 
 import { connectDB } from "@/lib/db-connection"
 import { registerSchema, resetPasswordSchema, verifyAccountSchema } from "@/lib/schemas"
-import { generateAccessToken, generateOTP, sendEmail } from "@/lib/utils"
+import { generateAccessToken } from "@/lib/utils/auth"
+import { sendEmail } from "@/lib/utils/mailer"
+import { generateOTP } from "@/lib/utils/utils"
 import { UserModel } from "@/models/user"
 import { IUser, IUserDocument } from "@/types"
 import { compare, hash } from "bcrypt"
@@ -158,8 +160,11 @@ export async function sendVerificationEmailAction (userEmail:string) {
         user.verification_otp = null
         user.save()
     },ms)
+    const isSuccess = await sendEmail(userEmail,{
+        subject:"Account Verification Code",
+        text:otp,
+    })
 
-    const isSuccess = sendEmail(userEmail,otp)
     if (isSuccess) {
         return {
             success:true,
@@ -258,8 +263,11 @@ export async function sendResetPasswordEmailAction (userEmail:string) {
         user.reset_password_otp = null
         user.save()
     },ms)
+    const isSuccess = await sendEmail(userEmail,{
+        subject:"Account Verification Code",
+        text:""
+    })
 
-    const isSuccess = sendEmail(userEmail,otp)
     if (isSuccess) {
         return {
             success:true,
@@ -311,7 +319,7 @@ export async function submitResetPasswordOTPAction(payload:TResetPasswordPayload
     
     const hashedPassword = await hash(payload.password,12)
     user.password = hashedPassword
-    user.verification_otp = null
+    user.reset_password_otp = null
     await user.save()
 
     return {
@@ -320,4 +328,16 @@ export async function submitResetPasswordOTPAction(payload:TResetPasswordPayload
         data:null
     }
     
+}
+
+
+export async function logoutAction () {
+    const cookieStore = await cookies()
+    cookieStore.delete("access_token")
+
+    return {
+        success:true,
+        data:null,
+        message:"Logged Out Successfully"
+    }
 }

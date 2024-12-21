@@ -25,6 +25,7 @@ const authRoutes = [
     "auth/login",
     "auth/register",
     "auth/verify-account",    
+    "auth/reset-account",    
 ]
 
 

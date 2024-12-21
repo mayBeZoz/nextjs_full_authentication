@@ -65,31 +65,30 @@ function VerifyAccount() {
                 handleSubmit={handleSubmit}
                 className="flex p-4 items-center py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
             >
-                <h1 className='form_heading mb-10'>Activate Your Account</h1>
-                <Label 
-                    htmlFor='otp_input' 
-                    className='mb-4 text-lg'>
-                    Enter Activation Code
-                </Label>
-                <div className="w-fit ">
+                <h1 className='form_heading mb-10'>Activate Your Account</h1>            
+                <div className="w-fit flex flex-col gap-2 mx-auto">
+                    <Label htmlFor='otp_input'>
+                        Enter Activation Code
+                    </Label>
                     <OTPFormInput
                         id='otp_input' 
                         slots={6} 
                         slotClassName='w-[50px] h-[50px]'
                         name='account_verification_otp'
                     />            
-                    <div className='mt-5 flex w-full justify-between'>
-                        <Button 
+                </div>      
+                <div className='mt-8 w-full mx-auto flex gap-2 justify-between'>
+                    <Button 
+                        className='w-[50%]'
                         disabled={isButtonsDisabled}
                         onClick={handleResendEmail}
-                        size="lg" 
-                        >Resend</Button>
+                    >Resend</Button>
 
-                        <Button 
+                    <Button 
                         disabled={isButtonsDisabled}
-                        size="lg" 
-                        type='submit'>Submit</Button>
-                    </div>
+                        className='w-[50%]'
+                        type='submit'
+                    >Submit</Button>
                 </div>
             </Form>
         </section>

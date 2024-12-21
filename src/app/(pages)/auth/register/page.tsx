@@ -4,12 +4,12 @@ import { Form } from "@/components/ui/form"
 import { FormInput } from "@/components/ui/form-input"
 import { registerSchema } from "@/lib/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Label } from "@radix-ui/react-label"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRegister } from "../_hooks/useRegister"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Label } from "@/components/ui/label"
 
 type TFormFields = z.infer<typeof registerSchema>
 
@@ -34,8 +34,8 @@ function Register() {
                 handleSubmit={registerFn}
                 className="flex p-4 py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
             >
-                <h1 className='form_heading mb-10'>Create Account</h1>
-                <div className="space-y-5">
+                <h1 className='form_heading mb-10'>Create An Account</h1>
+                <div className="space-y-5 mb-4">
                     <div>
                         <Label>First Name</Label>
                         <FormInput 
@@ -45,7 +45,7 @@ function Register() {
                         />
                     </div>
                     <div>
-                        <Label>last Name</Label>
+                        <Label>Last Name</Label>
                         <FormInput 
                             placeholder="Enter Your Last Name"
                             name="last_name"
@@ -69,7 +69,7 @@ function Register() {
                         />
                     </div>
                 </div>
-                <p className="text-sm space-x-1 mb-5 mt-2">
+                <p className="text-sm space-x-1 mb-5">
                     <span>Already Have An Account?</span>
                     <Link 
                         href="/auth/login" 

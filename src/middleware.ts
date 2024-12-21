@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { checkUserRouteAccess } from './lib/routes';
-import { decodeAuthToken } from './lib/utils';
+import { decodeAuthToken } from './lib/utils/auth';
  
 
 export function middleware(request: NextRequest) {

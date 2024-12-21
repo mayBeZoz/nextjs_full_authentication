@@ -39,11 +39,11 @@ function Step2() {
             handleSubmit={handleSubmit}
             className="flex p-4 py-10 rounded-lg border flex-col w-[90%] sm:w-[500px]"
         >
-            <h1 className='form_heading mb-10'>Enter Password Code</h1>
+            <h1 className='form_heading mb-10'>Enter Reset Code</h1>
             
             <div className="w-fit flex flex-col gap-2 mx-auto">
                 <Label htmlFor='otp_input'>
-                    Enter Reset Password Code
+                    Enter Password Reset Code
                 </Label>
                 <OTPFormInput
                     id='otp_input' 

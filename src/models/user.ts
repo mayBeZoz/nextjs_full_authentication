@@ -38,6 +38,8 @@ const userSchema = new Schema<IUserDocument>({
         default:USER_ROLES.USER,
         type:String,
     },
+},{
+    timestamps: true
 })
 
 export const UserModel = models.User || model<IUserDocument>("User",userSchema)
